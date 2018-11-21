@@ -1,21 +1,21 @@
 public class test11212 {
     public static void main(String[] args) {
-        int [] B = new int [6];//«Ø¥ß¤@­Ó°}¦C¦W¬°B¡A¥B¸Ì­±¥u¯à6­Ó¤¸¯À
-        int sum=0;//ªì©l­È¥Î¨Óªí¥ÜÁ`¦X
-        for(int i=0;i<6;i++){//²£¥Í6­Ó¶Ã¼Æ
-        	B[i]=(int)(Math.random()*6)+1;//²£¥Í¶Ã¼Æ¦b¦s¤JB lsit²Äi­Ó¦ì¸m
-        	sum+=B[i];//¥[­¼Á`¦X
-        	System.out.print("²Ä"+(i+1)+"­Ó¼Æ¬O"+B[i]+"\n");//¿é¥X²Äi¦ìªº¶Ã¼Æ­È
+        int [] B = new int [6];//å»ºç«‹ä¸€å€‹é™£åˆ—åç‚ºBï¼Œä¸”è£¡é¢åªèƒ½6å€‹å…ƒç´ 
+        int sum=0;//åˆå§‹å€¼ç”¨ä¾†è¡¨ç¤ºç¸½åˆ
+        for(int i=0;i<6;i++){//ç”¢ç”Ÿ6å€‹äº‚æ•¸
+        	B[i]=(int)(Math.random()*6)+1;//ç”¢ç”Ÿäº‚æ•¸åœ¨å­˜å…¥B lsitç¬¬iå€‹ä½ç½®
+        	sum+=B[i];//åŠ ä¹˜ç¸½åˆ
+        	System.out.print("ç¬¬"+(i+1)+"å€‹æ•¸æ˜¯"+B[i]+"\n");//è¼¸å‡ºç¬¬iä½çš„äº‚æ•¸å€¼
         }
-        System.out.print("Á`©M="+sum+"\n");//¿é¥XÁ`¦X
-        for(int i=1;i<7;i++){//§PÂ_B list¸Ì¬O§_¦³­«½Æ¶W¹L1¦¸¥H¤Wªº¶Ã¼Æ
-        	int count=0;//°O¼Æ
-        	for(int j=0;j<6;j++){//±q1-6§PÂ_¦¹¼Æ
-        		if(B[j]==i)//¦pªG°}¦C¸Ì¦³¬Û²Åªº¼Æcount´N¥[¤@
+        System.out.print("ç¸½å’Œ="+sum+"\n");//è¼¸å‡ºç¸½åˆ
+        for(int i=1;i<7;i++){//åˆ¤æ–·B listè£¡æ˜¯å¦æœ‰é‡è¤‡è¶…é1æ¬¡ä»¥ä¸Šçš„äº‚æ•¸
+        	int count=0;//è¨˜æ•¸
+        	for(int j=0;j<6;j++){//å¾1-6åˆ¤æ–·æ­¤æ•¸
+        		if(B[j]==i)//å¦‚æœé™£åˆ—è£¡æœ‰ç›¸ç¬¦çš„æ•¸countå°±åŠ ä¸€
         			count++;
         	}
-        	if(count>1)//§PÂ_1¼Æ¬O§_¶W¹L1­Ó¥H¤W
-        		System.out.print("¼Æ¦r"+i+"­«½Æ"+count+"¦¸");
+        	if(count>1)//åˆ¤æ–·1æ•¸æ˜¯å¦è¶…é1å€‹ä»¥ä¸Š
+        		System.out.println("æ•¸å­—"+i+"é‡è¤‡"+count+"æ¬¡");
         }
     }
 }
