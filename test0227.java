@@ -19,7 +19,7 @@ public class test0227 {
         			j=0;
         		}
         	}
-        	System.out.println("\nOptimal train swapping takes "+ c +" swaps.");
+        	sop("Optimal train swapping takes "+ c +" swaps.\n");
         }
     }
     static void sop(String s){
