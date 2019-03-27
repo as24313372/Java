@@ -11,25 +11,24 @@ class score{
 public class test0327 {
     public static void main(String[] args) {
     	Scanner sc = new Scanner(System.in);
-    	sop("½Ð¿é¤J¦³´Xµ§¸ê®Æ¡G");int m = sc.nextInt();
+    	sop("è«‹è¼¸å…¥æœ‰å¹¾ç­†è³‡æ–™ï¼š");int m = sc.nextInt();
     	score mate[] = new score[m];
     	for(int i=0;i<m;i++){
     		mate[i] = new score();
-    		sop("½Ð¿é¤J¾Ç¸¹¡G");
+    		sop("è«‹è¼¸å…¥å­¸è™Ÿï¼š");
     		mate[i].num = sc.next();
-    		sop("½Ð¿é¤J¤¤¤å¦¨ÁZ¡G");
+    		sop("è«‹è¼¸å…¥ä¸­æ–‡æˆç¸¾ï¼š");
     		mate[i].chi = sc.nextFloat();
-    		sop("½Ð¿é¤J­^¤å¦¨ÁZ¡G");
+    		sop("è«‹è¼¸å…¥è‹±æ–‡æˆç¸¾ï¼š");
     		mate[i].eng = sc.nextFloat();
-    		sop("½Ð¿é¤J¼Æ¤å¦¨ÁZ¡G");
+    		sop("è«‹è¼¸å…¥æ•¸æ–‡æˆç¸¾ï¼š");
     		mate[i].math = sc.nextFloat();
     		mate[i].pp=(mate[i].chi+mate[i].eng+mate[i].math)/3;
     	}
     	sop("----------------------------\n");
-    	sop("NO\t¤¤¤å\t­^¤å\t¼Æ¾Ç\t¥­§¡\n");
-    	for(int i=0;i<m;i++){
+    	sop("NO\tä¸­æ–‡\tè‹±æ–‡\tæ•¸å­¸\tå¹³å‡\n");
+    	for(int i=0;i<m;i++)
     		sop(mate[i].num + "\t" + mate[i].chi + "\t" + mate[i].eng + "\t" + mate[i].math + "\t" + mate[i].pp + "\n");
-    	}
     	sop("----------------------------\n");
     }
     static void sop(String s){
