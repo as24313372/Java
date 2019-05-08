@@ -1,3 +1,2 @@
-# Java
-Just for class or other use                                                                               
-此為首頁，如果要找專案，請去左上Branch選
+# UVA 10530
+URL：https://uva.onlinejudge.org/external/105/p10530.pdf
