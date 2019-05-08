@@ -14,23 +14,6 @@ public class test0501 {
         	int num = sc.nextInt();
         	if(num==0)break;sc.nextLine();sc.next();
         	String check = sc.next();
-        	/*
-        	if(check == "high"){
-        		for(int i=num;i<10;i++)
-        			number[i] = 1;
-        	}else if(check == "low"){
-        		for(int i=num;i>0;i--)
-        			number[i] = 1;
-        	}else if(check == "on"){
-        		if(number[num] == 1)
-        			System.out.println("Stan is dishonest");
-        		else
-        			System.out.println("Stan may be honest");
-        		for(int i=0;i<10;i++)
-        			number[i] = 0;
-        	}else{
-        		System.out.println("error ans");
-        	}*/
         	switch(check){
         		case "high":
         			for(int i=num-1;i<10;i++)
