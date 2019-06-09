@@ -27,7 +27,11 @@ class canvas extends CanvasBase implements KeyListener{
     Image image;
 	static Timer timer;
 	static int timecount = 240;
-	static boolean dircheck = false;
+	static boolean dircheck = false,secfile = false,gameover = false;
+	static int saveboxp[][];
+	static int saveboxkey[][];
+	static int boxcount,chance;
+	static sg sg1,sg2,sg3,sg4;
 	
     public canvas() {
     	
@@ -38,7 +42,7 @@ class canvas extends CanvasBase implements KeyListener{
     }
     
     public void setRes(String[] res) {
-        //設定res
+        //嚙稽嚙緩res
         this.res = res;
     }
     
@@ -54,78 +58,20 @@ class canvas extends CanvasBase implements KeyListener{
 	    
 	    for(int x=0; x<ponx; x++){
     		for(int y=0; y<pony; y++){
-    			switch(strmaze[x][y]){
-    				case "0":
-    					try{
-    						fileRes = this.res[Integer.parseInt(strmaze[x][y])];
-		    				image = ImageIO.read(new File(fileRes));
-			        		g.drawImage(image, y*50, x*50, 50, 50,null);
-			        	}catch (Exception ex) {
-			        	}
-    					break;
-    				case "1":
-    					try{
-    						fileRes = this.res[Integer.parseInt(strmaze[x][y])];
-		    				image = ImageIO.read(new File(fileRes));
-			        		g.drawImage(image, y*50, x*50, 50, 50,null);
-			        	}catch (Exception ex) {
-			        		g.fillRect(y*50,x*50,50,50);
-			        	}
-    					break;
-    				case "2":
-    					try{
-    						fileRes = this.res[Integer.parseInt(strmaze[x][y])];
-		    				image = ImageIO.read(new File(fileRes));
-			        		g.drawImage(image, y*50, x*50, 50, 50,null);
-			        	}catch (Exception ex) {
-		    				g.fillOval(y*50+10,x*50+10,30,30);
-			       		}
-    					break;
-    				case "3":
-    					try{
-    						fileRes = this.res[Integer.parseInt(strmaze[x][y])];
-		    				image = ImageIO.read(new File(fileRes));
-			        		g.drawImage(image, y*50, x*50, 50, 50,null);
-			        	}catch (Exception ex) {
-		    				g.fillRect(y*50+20,x*50+20,10,10);
-			        	}
-    					break;
-    				case "4":
-    					try{
-    						fileRes = this.res[Integer.parseInt(strmaze[x][y])];
-		    				image = ImageIO.read(new File(fileRes));
-			        		g.drawImage(image, y*50, x*50, 50, 50,null);
-			        	}catch (Exception ex) {
-		    				g.fillOval(y*50+10,x*50+10,30,30);
-			        	}
-    					break;
-					case "5":
-						try{
-    						fileRes = this.res[Integer.parseInt(strmaze[x][y])];
-		    				image = ImageIO.read(new File(fileRes));
-			        		g.drawImage(image, y*50, x*50, 50, 50,null);
-			        	}catch (Exception ex) {
-			        		g.fillRect(y*50,x*50,50,50);
-			        	}
-    					break;
-    				default:
-    					try{
-    						fileRes = this.res[Integer.parseInt(strmaze[x][y])];
-		    				image = ImageIO.read(new File(fileRes));
-			        		g.drawImage(image, y*50, x*50, 50, 50,null);
-			        	}catch (Exception ex) {
-		    				g.fillOval(y*50+10,x*50+10,30,30);
-			        	}
-    					break;
-    			}
+    			try{
+    				fileRes = this.res[Integer.parseInt(strmaze[x][y])];
+		    		image = ImageIO.read(new File(fileRes));
+			        g.drawImage(image, y*50, x*50, 50, 50,null);
+			    }catch (Exception ex) {
+			    }
     		}
     	}
-		g.drawString(Integer.toString(timecount/60)+":"+Integer.toString(timecount%60),10, pony*50+10);
+		g.drawString(Integer.toString(timecount)+"",10, pony*50+10);
     }
     
     public void updateMaze(int[][] m){
 		intmaze = m;
-		//更新迷宮
+		//嚙踝蕭s嚙篇嚙箱
 		for(int i=0; i<m.length; i++){
     		for(int j=0; j<m[i].length; j++){
     			maze.add(m[i][j]+"");
@@ -133,10 +79,13 @@ class canvas extends CanvasBase implements KeyListener{
     	}
     }
     
-    public void initMaze(int[][] m,int a,int b){
+    public void initMaze(int[][] m,int a,int b,int box[][],int key[][]){
+		saveboxkey = key;
+		saveboxp = box;
+		boxcount = box.length;
 		thiefx = a;thiefy = b;
 		intmaze = m;
-    	//初始化迷宮
+    	//嚙踝蕭l嚙複迷嚙箱
     	for(int i=0; i<m.length; i++){
     		for(int j=0; j<m[i].length; j++){
     			maze.add(m[i][j]+"");
@@ -165,19 +114,28 @@ class canvas extends CanvasBase implements KeyListener{
 		
         jf.setBounds(100, 100, ponx*50+100, pony*50+100);
         jf.setVisible(true);
-		timer = new Timer(1000, new ActionListener() {
+		sgspawn();
+		timer = new Timer(250, new ActionListener() {
 		      @Override
 		      public void actionPerformed(ActionEvent e) {
-		        timecount--;
-		        if (timecount >= 0) {
-		          	updateMaze(intmaze);
-		        } else {
-		          timer.stop();
-		        }
+				timecount--;
+				sgcontrol();
+				updateMaze(intmaze);
+				if(gameover){
+					timer.stop();
+					JOptionPane.showMessageDialog(null, "你被保全發現了","訊息",JOptionPane.WARNING_MESSAGE);
+					for(int i=0;i<intmaze.length;i++){
+						for(int j=0;j<intmaze[0].length;j++)
+							System.out.printf("%2d",intmaze[i][j]);
+						System.out.println();
+					}
+					System.exit(0);
+				}
 		      }
 		  	});
 		timer.setInitialDelay(0);
 	    timer.start();
+		
 	}
 	@Override
 	public void keyTyped(KeyEvent e) {
@@ -210,101 +168,310 @@ class canvas extends CanvasBase implements KeyListener{
 	}
 	public void goCheck(int move){//character move action
 		switch(move){
-			case 0:
-				if(dir != 0){
-					intmaze[thiefy][thiefx] = 6;
-					dir = 0;
-				}else if(thiefy+1 != intmaze.length && intmaze[thiefy+1][thiefx]==0){
-					intmaze[thiefy+1][thiefx] = 6;
-					intmaze[thiefy][thiefx] = 0;
-					thiefy++;
+			case 0://down
+				if(thiefy+1 != intmaze.length){
+					if(dir != 0){
+						intmaze[thiefy][thiefx] = 6;
+						dir = 0;
+					}else if(thiefy+1 != intmaze.length && intmaze[thiefy+1][thiefx]==0){
+						intmaze[thiefy+1][thiefx] = 6;
+						intmaze[thiefy][thiefx] = 0;
+						thiefy++;
+					}
 				}
 				break;
-			case 1:
-				if(dir != 1){
-					intmaze[thiefy][thiefx] = 7;
-					dir = 1;
-				}else if(thiefx-1 != -1 && intmaze[thiefy][thiefx-1]==0){
-					intmaze[thiefy][thiefx-1] = 7;
-					intmaze[thiefy][thiefx] = 0;
-					thiefx--;
+			case 1://left
+				if(thiefx-1 != -1){
+					if(dir != 1){
+						intmaze[thiefy][thiefx] = 7;
+						dir = 1;
+					}else if(thiefx-1 != -1 && intmaze[thiefy][thiefx-1]==0){
+						intmaze[thiefy][thiefx-1] = 7;
+						intmaze[thiefy][thiefx] = 0;
+						thiefx--;
+					}
 				}
 				break;
-			case 2:
-				if(dir != 2){
-					intmaze[thiefy][thiefx] = 8;
-					dir = 2;
-				}else if(thiefy-1 != -1 && intmaze[thiefy-1][thiefx]==0){
-					intmaze[thiefy-1][thiefx] = 8;
-					intmaze[thiefy][thiefx] = 0;
-					thiefy--;
+			case 2://up
+				if(thiefy-1 != -1){
+					if(dir != 2){
+						intmaze[thiefy][thiefx] = 8;
+						dir = 2;
+					}else if(thiefy-1 != -1 && intmaze[thiefy-1][thiefx]==0){
+						intmaze[thiefy-1][thiefx] = 8;
+						intmaze[thiefy][thiefx] = 0;
+						thiefy--;
+					}
 				}
 				break;
-			case 3:
-				if(dir != 3){
-					intmaze[thiefy][thiefx] = 9;
-					dir = 3;
-				}else if(thiefx+1 != intmaze[0].length && intmaze[thiefy][thiefx+1]==0){
-					intmaze[thiefy][thiefx+1] = 9;
-					intmaze[thiefy][thiefx] = 0;
-					thiefx++;
+			case 3://right
+				if(thiefx+1 != intmaze[0].length){
+					if(dir != 3){
+						intmaze[thiefy][thiefx] = 9;
+						dir = 3;
+					}else if(thiefx+1 != intmaze[0].length && intmaze[thiefy][thiefx+1]==0){
+						intmaze[thiefy][thiefx+1] = 9;
+						intmaze[thiefy][thiefx] = 0;
+						thiefx++;
+					}
 				}
 				break;
 		}
 		updateMaze(intmaze);
 	}
 	public void spacecheck(){
+		int checkbox;
 		if(dircheck == false){
-			System.out.println("請開始動作");
+			System.out.println("請開始動作！");
 		}else{
-			switch(dir){
-				case 0://0:down
-					if(intmaze[thiefy+1][thiefx] == 2){
-						System.out.println("Get the savecase");
-						intmaze[thiefy+1][thiefx] = 0;
-					}
-					break;
-				case 1://1:left
-					if(intmaze[thiefy][thiefx-1] == 2){
-						System.out.println("Get the savecase");
-						intmaze[thiefy][thiefx-1] = 0;
-					}
-					break;
-				case 2://2:up
-					if(intmaze[thiefy-1][thiefx] == 2){
-						System.out.println("Get the savecase");
-						intmaze[thiefy-1][thiefx] = 0;
-					}
-					break;
-				case 3://3:right
-					if(intmaze[thiefy][thiefx+1] == 2){
-						System.out.println("Get the savecase");
-						intmaze[thiefy][thiefx+1] = 0;
-					}
-					break;
+			if(thiefy != 0 && thiefx != 0 && thiefy != intmaze.length-1 && thiefx != intmaze[0].length-1){
+				switch(dir){
+					case 0://0:down
+						if(intmaze[thiefy+1][thiefx] == 12){
+							if(boxcheck(thiefy+1,thiefx) != -1){
+								System.out.printf("Get the savecase %d\n",saveboxp[boxcheck(thiefy+1,thiefx)][2]);
+								intmaze[thiefy+1][thiefx] = 16;
+								boxcount--;
+							}
+						}
+						if(intmaze[thiefy+1][thiefx] == 3){
+							saveboxkeycheck(thiefy+1,thiefx);
+							intmaze[thiefy+1][thiefx] = 0;
+						}
+						System.out.println(intmaze[thiefy+1][thiefx]);
+						break;
+					case 1://1:left
+						if(intmaze[thiefy][thiefx-1] == 13){
+							if(boxcheck(thiefy,thiefx-1) != -1){
+								System.out.printf("Get the savecase %d\n",saveboxp[boxcheck(thiefy,thiefx-1)][2]);
+								intmaze[thiefy][thiefx-1] = 17;
+								boxcount--;
+							}
+						}
+						if(intmaze[thiefy][thiefx-1] == 3){
+							saveboxkeycheck(thiefy,thiefx-1);
+							intmaze[thiefy][thiefx-1] = 0;
+						}
+						System.out.println(intmaze[thiefy][thiefx-1]);
+						break;
+					case 2://2:up
+						if(intmaze[thiefy-1][thiefx] == 10){
+							if(boxcheck(thiefy-1,thiefx) != -1){
+								System.out.printf("Get the savecase %d\n",saveboxp[boxcheck(thiefy-1,thiefx)][2]);
+								intmaze[thiefy-1][thiefx] = 14;
+								boxcount--;
+							}
+						}
+						if(intmaze[thiefy-1][thiefx] == 3){
+							saveboxkeycheck(thiefy-1,thiefx);
+							intmaze[thiefy-1][thiefx] = 0;
+						}
+						System.out.println(intmaze[thiefy-1][thiefx]);
+						break;
+					case 3://3:right
+						if(intmaze[thiefy][thiefx+1] == 11){
+							if(boxcheck(thiefy,thiefx+1) != -1){
+								System.out.printf("Get the savecase %d\n",saveboxp[boxcheck(thiefy,thiefx+1)][2]);
+								intmaze[thiefy][thiefx+1] = 15;
+								boxcount--;
+							}
+						}
+						if(intmaze[thiefy][thiefx+1] == 3){
+							saveboxkeycheck(thiefy,thiefx+1);
+							intmaze[thiefy][thiefx+1] = 0;
+						}
+						System.out.println(intmaze[thiefy][thiefx+1]);
+						break;
+				}
+			}else{
+				if(boxcount == 0){
+					System.out.println("pass");
+					JOptionPane.showMessageDialog(null, "恭喜你完成目標","訊息",JOptionPane.INFORMATION_MESSAGE);
+					System.exit(0);
+				}else
+					System.out.println("not pass");
 			}
 			updateMaze(intmaze);
+		}
+	}
+	public int boxcheck(int y,int x){
+		boolean keynotget = false;
+		for(int i=0;i<saveboxkey.length;i++){
+			if(y == saveboxkey[i][3] && x == saveboxkey[i][4] && saveboxkey[i][2] == 1){
+				keynotget = true;
+				return i;
+			}
+		}
+		if(keynotget == false){
+			for(int i=0;i<saveboxp.length;i++){
+				if(y == saveboxp[i][0] && x == saveboxp[i][1] && (saveboxp[i][2] == 1 || saveboxp[i][2] == 4))
+					return i;
+			}
+		}
+		return -1;
+	}
+	public void saveboxkeycheck(int y,int x){
+		for(int i=0;i<saveboxkey.length;i++){
+			if(y == saveboxkey[i][0] && x == saveboxkey[i][1]){
+				saveboxkey[i][2] = 1;
+				System.out.println(saveboxkey[i][3] + " " + saveboxkey[i][4]);
+			}
+		}
+	}
+	public void sgspawn(){
+		sg1 = new sg(intmaze);
+		sg2 = new sg(intmaze);
+		sg3 = new sg(intmaze);
+		sg4 = new sg(intmaze);
+		sg1.start();
+		intmaze = sg1.intmaze;
+		chance = (int)(Math.random() * 1000000 % 100);
+		if(chance < 30){
+			sg2.intmaze = intmaze;
+			sg2.start();
+			intmaze = sg2.intmaze;
+		}
+		if(chance < 20){
+			sg3.intmaze = intmaze;
+			sg3.start();
+			intmaze = sg3.intmaze;
+		}
+		if(chance < 10){
+			sg4.intmaze = intmaze;
+			sg4.start();
+			intmaze = sg4.intmaze;
+		}
+	}
+	public void sgcontrol(){//thief 4 5V 6< 7^ 8>
+		intmaze = sg1.intmaze;
+		sgcheck(sg1.y,sg1.x,sg1.sgdir);
+		sg1.intmaze = intmaze;
+		if(chance < 30){
+			intmaze = sg2.intmaze;
+			sgcheck(sg2.y,sg2.x,sg2.sgdir);
+			sg2.intmaze = intmaze;
+		}if(chance < 20){
+			intmaze = sg3.intmaze;
+			sgcheck(sg3.y,sg3.x,sg3.sgdir);
+			sg3.intmaze = intmaze;
+		}if(chance < 10){
+			intmaze = sg4.intmaze;
+			sgcheck(sg4.y,sg4.x,sg4.sgdir);
+			sg4.intmaze = intmaze;
+		}
+		if(gameover == true){
+			sg1.check = false;
+			if(chance < 30)
+				sg2.check = false;
+			if(chance < 20)
+				sg3.check = false;
+			if(chance < 10)
+				sg4.check = false;
+		}
+	}
+	public void sgcheck(int y,int x,int sgdirc){
+		if(sgdirc == 0){
+			intmaze[y][x] =19;
+			for(int i=4;i<9;i++){
+				if(i != 5 && intmaze[y+1][x] == i)gameover = true;
+			}
+		}else if(sgdirc == 1){
+			intmaze[y][x] =20;
+			for(int i=4;i<9;i++){
+				if(i != 5 && intmaze[y][x-1] == i)gameover = true;
+			}
+		}else if(sgdirc == 2){
+			intmaze[y][x] =21;
+			for(int i=4;i<9;i++){
+				if(i != 5 && intmaze[y-1][x] == i)gameover = true;
+			}
+		}else if(sgdirc == 3){
+			intmaze[y][x] =22;
+			for(int i=4;i<9;i++){
+				if(i != 5 && intmaze[y][x+1] == i)gameover = true;
+			}
+		}
+		System.out.println(y + " " + x + " " + sgdirc);
+	}
+}
+/*	 2
+* 1	 	3
+*	 0	*/
+class sg extends Thread{
+	static boolean check = true;
+	static int countsg = 0;
+	static int sgdir = 0;
+	static int x,y;
+	static int intmaze[][];
+	sg(int m[][]){
+		intmaze = m;
+	}
+	public void run(){
+		while(true){
+			y = (int)(Math.random() * 1000000 % intmaze.length-1);
+			x = (int)(Math.random() * 1000000 % intmaze[0].length-1);
+			if(intmaze[y][x] == 0)break;
+		}
+		while(check){
+			System.out.println(countsg++);
+			try{
+				sleep(1000);
+				intmaze[y][x] = 0;
+				if((int)(Math.random() * 1000000 % 2) == 1){
+					if((int)(Math.random() * 1000000 % 2) == 1){
+						if(sgdir == 0){
+							if(y != intmaze.length-2 && intmaze[y+1][x] == 0)
+								y++;
+						}else
+							sgdir = 0;
+					}else{
+						if(sgdir == 2){
+							if(y != 1 && intmaze[y-1][x] == 0)
+								y--;
+						}else
+							sgdir = 2;
+					}
+				}else{
+					if((int)(Math.random() * 1000000 % 2) == 1){
+						if(sgdir == 3){
+							if(x != intmaze[0].length-2 && intmaze[y][x+1] == 0)
+								x++;
+						}else
+							sgdir = 3;
+					}else{
+						if(sgdir == 1){
+							if(x != 1 && intmaze[y][x-1] == 0)
+								x--;
+						}else
+							sgdir = 1;
+					}
+				}
+			}catch(Exception e){
+				
+			}
 		}
 	}
 }
 
 public class mazecase extends canvas{
 
+	static int saveboxkey[][];//y x getkey?=>(0not,1yes) boxpx boxpy
+	static int saveboxp[][];//y x open=>[0key,1password,2secfile=>(3key,4password)]
 	static int a; //a and b is start position
-	static int b;
+	static int b; //a = x,b = y
     static canvas can = new canvas();
-    //setRes 設定res
-    //initMaze 初始化迷宮
-	//updateMaze 更新迷宮
+    //setRes 嚙稽嚙緩res
+    //initMaze 嚙踝蕭l嚙複迷嚙箱
+	//updateMaze 嚙踝蕭s嚙篇嚙箱
 	
     public static void main(String[] args) {
     	String[] res = {
     		"res/floor.png",//road0
     		"res/wall.png",//wall1
     		"res/savebox.png",//2
-    		"",//走過的路3
+    		"res/key/key.png",//key3
     		"res/thief/thief.png",//thief4
-			"res/wall.png",//5
+			"res/wall.png",//wall5
 			"res/thief/thiefdown.png",//6
 			"res/thief/thiefleft.png",//7
 			"res/thief/thiefup.png",//8
@@ -317,22 +484,29 @@ public class mazecase extends canvas{
 			"res/savebox/sboleft.png",//15
 			"res/savebox/sboup.png",//16
 			"res/savebox/sboright.png",//17
-			"res/sp/sp.png",//18---------------
-			"res/sp/spdown.png",//19
-			"res/sp/spleft.png",//20
-			"res/sp/spup.png",//21
-			"res/sp/spright.png",//22
+			"res/securityguard/sg.png",//18---------------
+			"res/securityguard/sgdown.png",//19
+			"res/securityguard/sgleft.png",//20
+			"res/securityguard/sgup.png",//21
+			"res/securityguard/sgright.png",//22
 			"res/key/key1.png"//23
     	};
     	can.setRes(res);
-    	
+
         Scanner sca=new Scanner(System.in);
-    	
-    	System.out.print("請輸入迷宮的高跟寬(請以SPACE隔開)：");
-    	int maze[][]=new int[sca.nextInt()+2][sca.nextInt()+2];
-    	System.out.println(maze.length+"*"+maze[0].length+"迷宮已經建好了");
-    	buildfence(maze);
-		can.initMaze(maze,a,b);
+		int maze[][];
+		while(true){
+			System.out.print("請輸入場地大小，輸入兩個數字以空排隔開(兩個數字需大於5)：");
+			int mazey = sca.nextInt();int mazex = sca.nextInt();
+			if(mazey > 5 && mazex >5){
+				maze = new int[mazey+2][mazex+2];break;
+			}else
+				System.out.println("請輸入大於5的數字");
+		}
+		buildfence(maze);
+		System.out.println(maze.length+"*"+maze[0].length+"已建立完成");
+		can.initMaze(maze,a,b,saveboxp,saveboxkey);
+		
 	}
 	
     public static void buildfence(int[][] maze)
@@ -355,8 +529,8 @@ public class mazecase extends canvas{
     	else if(count == 2)maze[maze.length-2][maze[0].length-2] = 0;
     	else maze[1][maze[0].length-2] = 0;
     	while(checkwall == false){
-    		int x,y,wallcount = 0;//count算隔壁是否可以替換，並且重複執行。
-    		while(true){//隨機挑選inwall
+    		int x,y,wallcount = 0;//count嚙踝蕭j嚙踝蕭嚙瞌嚙稻嚙箠嚙瘡嚙踝蕭嚙踝蕭嚙璀嚙衛且嚙踝蕭嚙複堆蕭嚙踝蕭C
+    		while(true){//嚙瘡嚙踝蕭嚙瘩嚙踝蕭inwall
     			y = (int)(Math.random() * 1000000 % maze.length-1);
     			x = (int)(Math.random() * 1000000 % maze[0].length-1);
     			if(x != 0 && y !=0 && (x % 2 == 0 || y % 2 == 0) && maze[y][x] == 5){
@@ -364,7 +538,7 @@ public class mazecase extends canvas{
     				break;
     			}
     		}
-    		for(int i=0;i<maze.length;i++){//確認旁邊有無路
+    		for(int i=0;i<maze.length;i++){//嚙確嚙緹嚙踝蕭嚙賭有嚙盤嚙踝蕭
         		for(int j=0;j<maze[0].length;j++){
         			if(maze[i][j] == 0){
         				if(maze[i-1][j] == -1){
@@ -458,44 +632,121 @@ public class mazecase extends canvas{
 				}
 				break;
 		}//--------------
-    	maze[maze.length-2][maze[0].length-2]=2;
+		System.out.println("spawn wall finish");
+    	buildsavebox(maze);
+		System.out.println("spawn savebox finish");
+		spawnkey(maze);
+		System.out.println("spawn key finish");
     }//1:wall,0:road,4:start,2:testsavecase,3:walkbefore
 	static int checkmaze(int x,int y,int [][]m,int wallfloor){
-    	if(m[y][x] == wallfloor && m[y-1][x] == 0 && m[y+1][x] == 0){//上中下
-			if(m[y][x-1] == 0 && m[y][x+1] == 0){//左右
-				if(m[y+1][x+1] == 0 && m[y+1][x-1] == 0 && m[y-1][x+1] == 0 && m[y-1][x-1] == 0){//左上左下右上右下
+    	if(m[y][x] == wallfloor && m[y-1][x] == 0 && m[y+1][x] == 0){//嚙磕嚙踝蕭嚙磊
+			if(m[y][x-1] == 0 && m[y][x+1] == 0){//嚙踝蕭嚙糊
+				if(m[y+1][x+1] == 0 && m[y+1][x-1] == 0 && m[y-1][x+1] == 0 && m[y-1][x-1] == 0){//嚙踝蕭嚙磕嚙踝蕭嚙磊嚙糊嚙磕嚙糊嚙磊
 					return 5;
 				}
 			}
 		}
     	return 0;
-    }
-	/*static void buildsavebox(int [][]m){
-		int x,y;
-		int count = (int)(Math.random() * 1000000 % 3);
-		switch(count){
-			case 2://3 savebox
+	}
+	static void buildsavebox(int [][]m){
+		int x,y,countnum = 0;
+		int boxcount = (int)(Math.random() * 1000000 % 3);
+		System.out.println("boxcount:" + boxcount);
+		saveboxp = new int [boxcount+1][3];//y(0),x(1),key0 or password1 or important file2(3)
+		for(int i=0;i<=boxcount;i++){
 			while(true){
-				y = (int)(Math.random() * 1000000 % maze.length-1);
-    			x = (int)(Math.random() * 1000000 % maze[0].length-1);
-				if(maze[y][x] == 0 &&)
+				y = (int)(Math.random() * 1000000 % m.length);
+				x = (int)(Math.random() * 1000000 % m[0].length);
+				if(m[y][x] == 0 && Math.abs(a - x) >= 3 && Math.abs(b - y) >= 3 && (x < 5 || y < 5)){
+					if(countnum == 0){
+						if(checksavebox(m,y,x) == 1){
+							m[y][x] = 2;saveboxdir(m,x,y);saveboxp[i][0] = y;saveboxp[i][1] = x;
+							saveboxp[i][2] = 2;countnum++;
+							break;}
+					}else if(countnum == 1){
+						//if(Math.abs((int)(saveboxp[0][0]) - y) > 2 || Math.abs((int)(saveboxp[0][1]) - x) > 2){
+							if(checksavebox(m,y,x) == 1){
+							m[y][x] = 2;saveboxdir(m,x,y);saveboxp[i][0] = y;saveboxp[i][1] = x;
+							saveboxp[i][2] = (int)(Math.random() * 1000000 % 2);countnum++;
+							break;}
+						//}
+					}else if(countnum == 2){
+						//if(Math.abs((int)(saveboxp[0][0]) - y) > 1 || Math.abs((int)(saveboxp[0][1]) - x) > 1){
+							//if(Math.abs((int)(saveboxp[1][0]) - y) > 1 || Math.abs((int)(saveboxp[1][1]) - x) > 1){
+								if(checksavebox(m,y,x) == 1){
+								m[y][x] = 2;saveboxdir(m,x,y);saveboxp[i][0] = y;saveboxp[i][1] = x;
+								saveboxp[i][2] = (int)(Math.random() * 1000000 % 2);countnum++;
+								break;}
+							//}
+						//}
+					}
+				}
 			}
-			case 1://2 savebox
-			
-			case 0://3 savebox
 		}
-	}*/
+	}
+	static int checksavebox(int m[][],int y,int x){
+		int checkdir = 0;
+		if(m[y-1][x] == 0){
+			//if(m[y-2][x] == 0 || m[y-1][x-1] == 0 || m[y-1][x+1] == 0)checkdir =1;
+			if(m[y-1][x-1] == 0 && m[y][x-1] == 0)checkdir = 1;
+			if(m[y-1][x+1] == 0 && m[y][x+1] == 0)checkdir = 1;
+		}
+		if(m[y+1][x] == 0){
+			//if(m[y+2][x] == 0 || m[y+1][x-1] == 0 || m[y+1][x+1] == 0)checkdir =1;
+			if(m[y+1][x-1] == 0 && m[y][x-1] == 0)checkdir = 1;
+			if(m[y+1][x+1] == 0 && m[y][x+1] == 0)checkdir = 1;
+		}
+		if(m[y][x-1] == 0){
+			//if(m[y][x-2] == 0 || m[y-1][x-1] == 0 || m[y+1][x-1] == 0)checkdir =1;
+			if(m[y-1][x-1] == 0 && m[y-1][x] == 0)checkdir = 1;
+			if(m[y+1][x-1] == 0 && m[y+1][x] == 0)checkdir = 1;
+		}
+		if(m[y][x+1] == 0){
+			//if(m[y][x+2] == 0 || m[y-1][x+1] == 0 || m[y+1][x+1] == 0)checkdir =1;
+			if(m[y-1][x+1] == 0 && m[y-1][x] == 0)checkdir = 1;
+			if(m[y+1][x+1] == 0 && m[y+1][x] == 0)checkdir = 1;
+		}
+		return checkdir;
+	}
 	static void saveboxdir(int [][]m,int boxmx,int boxmy){
 		if(m[boxmy][boxmx] == 2){
-			if(m[boxmy+1][boxmx] == 0)//down
-				m[boxmy][boxmx] = 10;
-			else if(m[boxmy+1][boxmx] == 0)//left
-				m[boxmy][boxmx] = 11;
-			else if(m[boxmy+1][boxmx] == 0)//up
-				m[boxmy][boxmx] = 12;
-			else if(m[boxmy+1][boxmx] == 0)//right
-				m[boxmy][boxmx] = 13;
+			if(m[boxmy+1][boxmx] == 0){//down
+				if(m[boxmy+1][boxmx+1] == 0 || m[boxmy+1][boxmx-1] == 0|| m[boxmy+2][boxmx] == 0)
+					m[boxmy][boxmx] = 10;
+			}else if(m[boxmy][boxmx-1] == 0){//left
+				if(m[boxmy+1][boxmx-1] == 0 || m[boxmy-1][boxmx-1] == 0|| m[boxmy][boxmx-2] == 0)
+					m[boxmy][boxmx] = 11;
+			}else if(m[boxmy-1][boxmx] == 0){//up
+				if(m[boxmy-1][boxmx+1] == 0 || m[boxmy-1][boxmx-1] == 0|| m[boxmy-2][boxmx] == 0)
+					m[boxmy][boxmx] = 12;
+			}else if(m[boxmy][boxmx+1] == 0){//right
+				if(m[boxmy+1][boxmx+1] == 0 || m[boxmy-1][boxmx+1] == 0|| m[boxmy][boxmx+2] == 0)
+					m[boxmy][boxmx] = 13;
+			}
 		}else
-			System.out.println("Error");
+			System.out.println("saveboxdir Error");
+	}
+	static void spawnkey(int m[][]){
+		saveboxp[0][2] = (int)(Math.random() * 1000000 % 2) + 3;//3secfilekey,4secfilepassword
+		saveboxkey = new int [saveboxp.length][5];
+		for(int i=0;i<saveboxkey.length;i++)
+			for(int j=0;j<5;j++)
+				saveboxkey[i][j] =0;//turn to zero
+		for(int i=0;i<saveboxp.length;i++){
+			if(saveboxp[i][2] == 0 || saveboxp[i][2] == 3){
+				while(true){
+					int y = (int)(Math.random() * 1000000 % m.length-1);
+					int x = (int)(Math.random() * 1000000 % m[0].length-1);
+					if(Math.abs(a - x) >= 2 && Math.abs(b - y) >= 2){
+						if(m[y][x] == 0 && Math.abs(saveboxp[i][0] - y) > 2 && Math.abs(saveboxp[i][1] - x) > 2){
+							saveboxkey[i][0] = y;saveboxkey[i][1] = x;
+							saveboxkey[i][3] = saveboxp[i][0];saveboxkey[i][4] = saveboxp[i][1];
+							m[y][x] = 3;
+							break;
+						}
+					}
+				}
+			}
+		}
 	}
 }
