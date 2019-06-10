@@ -19,7 +19,7 @@ class canvas extends CanvasBase implements KeyListener{
     static ArrayList<String> maze = new ArrayList<String>();
     static String[][] strmaze;
     static int con = 0;
-    static int fps = 60;//speed
+    static int fps = 120;//speed
 	static int intmaze[][];//int maze
 	static int thiefx,thiefy,dir=5;//thief position now,0:down,1:left,2:up,3:right
     static String[] res;
@@ -116,7 +116,7 @@ class canvas extends CanvasBase implements KeyListener{
         jf.setBounds(100, 100, ponx*50+100, pony*50+100);
         jf.setVisible(true);
 		sgspawn();
-		timer = new Timer(250, new ActionListener() {
+		timer = new Timer(100, new ActionListener() {
 		      @Override
 		      public void actionPerformed(ActionEvent e) {
 				timecount--;
@@ -328,44 +328,37 @@ class canvas extends CanvasBase implements KeyListener{
 	}
 	public void sgspawn(){
 		sg1 = new sg(intmaze);
-		sg2 = new sg(intmaze);
-		sg3 = new sg(intmaze);
-		sg4 = new sg(intmaze);
 		sg1.start();
 		intmaze = sg1.intmaze;
 		chance = (int)(Math.random() * 1000000 % 100);
+		sg2 = new sg(intmaze);
 		if(chance < 30){
-			sg2.intmaze = intmaze;
 			sg2.start();
 			intmaze = sg2.intmaze;
 		}
+		sg3 = new sg(intmaze);            
 		if(chance < 20){
-			sg3.intmaze = intmaze;
 			sg3.start();
 			intmaze = sg3.intmaze;
 		}
+		sg4 = new sg(intmaze);
 		if(chance < 10){
-			sg4.intmaze = intmaze;
 			sg4.start();
 			intmaze = sg4.intmaze;
 		}
 	}
 	public void sgcontrol(){//thief 4 5V 6< 7^ 8>
-		intmaze = sg1.intmaze;
-		sgcheck(sg1.y,sg1.x,sg1.sgdir);
 		sg1.intmaze = intmaze;
+		sgcheck(sg1.y,sg1.x,sg1.sgdir);
 		if(chance < 30){
-			intmaze = sg2.intmaze;
-			sgcheck(sg2.y,sg2.x,sg2.sgdir);
 			sg2.intmaze = intmaze;
+			sgcheck(sg2.y,sg2.x,sg2.sgdir);
 		}if(chance < 20){
-			intmaze = sg3.intmaze;
-			sgcheck(sg3.y,sg3.x,sg3.sgdir);
 			sg3.intmaze = intmaze;
+			sgcheck(sg3.y,sg3.x,sg3.sgdir);
 		}if(chance < 10){
-			intmaze = sg4.intmaze;
-			sgcheck(sg4.y,sg4.x,sg4.sgdir);
 			sg4.intmaze = intmaze;
+			sgcheck(sg4.y,sg4.x,sg4.sgdir);
 		}
 		if(gameover == true){
 			sg1.check = false;
@@ -448,11 +441,11 @@ class canvas extends CanvasBase implements KeyListener{
 * 1	 	3
 *	 0	*/
 class sg extends Thread{
-	static boolean check = true;
-	static int countsg = 0;
-	static int sgdir = 0;
-	static int x,y;
-	static int intmaze[][];
+	public boolean check = true;
+	public int countsg = 0;
+	public int sgdir = 0;
+	public int x,y;
+	public int intmaze[][];
 	sg(int m[][]){
 		intmaze = m;
 	}
