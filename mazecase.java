@@ -24,6 +24,7 @@ class canvas extends CanvasBase implements KeyListener{
 	static int thiefx,thiefy,dir=5;//thief position now,0:down,1:left,2:up,3:right
     static String[] res;
     static String fileRes;
+	static JFrame jf;
     Image image;
 	static Timer timer;
 	static int timecount = 240;
@@ -42,7 +43,7 @@ class canvas extends CanvasBase implements KeyListener{
     }
     
     public void setRes(String[] res) {
-        //ï¿½]ï¿½wres
+        //for res
         this.res = res;
     }
     
@@ -71,7 +72,7 @@ class canvas extends CanvasBase implements KeyListener{
     
     public void updateMaze(int[][] m){
 		intmaze = m;
-		//ï¿½ï¿½sï¿½gï¿½c
+		//
 		for(int i=0; i<m.length; i++){
     		for(int j=0; j<m[i].length; j++){
     			maze.add(m[i][j]+"");
@@ -85,7 +86,7 @@ class canvas extends CanvasBase implements KeyListener{
 		boxcount = box.length;
 		thiefx = a;thiefy = b;
 		intmaze = m;
-    	//ï¿½ï¿½lï¿½Æ°gï¿½c
+    	//
     	for(int i=0; i<m.length; i++){
     		for(int j=0; j<m[i].length; j++){
     			maze.add(m[i][j]+"");
@@ -96,11 +97,11 @@ class canvas extends CanvasBase implements KeyListener{
     	pony = m[0].length;
     	
         strmaze = new String[ponx][pony];
-    	JFrame jf = new JFrame();
+    	jf = new JFrame();
         jf.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		jf.addWindowListener(new WindowAdapter(){
    	    public void windowClosing(WindowEvent event){
-   	    	int yesno = JOptionPane.showConfirmDialog(null, "Do you want close this window?","CloseWindow",JOptionPane.YES_NO_OPTION);
+   	    	int yesno = JOptionPane.showConfirmDialog(jf, "Do you want close this window?","CloseWindow",JOptionPane.YES_NO_OPTION);
    	    	if(yesno == 0)System.exit(0);
    	     }
         });
@@ -123,10 +124,10 @@ class canvas extends CanvasBase implements KeyListener{
 				updateMaze(intmaze);
 				if(gameover){
 					timer.stop();
-					JOptionPane.showMessageDialog(null, "§A³Q«O¥şµo²{¤F","°T®§",JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(jf, "ä½ è¢«ä¿å…¨ç™¼ç¾äº†","è¨Šæ¯",JOptionPane.WARNING_MESSAGE);
 					for(int i=0;i<intmaze.length;i++){
 						for(int j=0;j<intmaze[0].length;j++)
-							System.out.printf("%2d",intmaze[i][j]);
+							System.out.printf("%2d",(int)(intmaze[i][j]));
 						System.out.println();
 					}
 					System.exit(0);
@@ -222,7 +223,7 @@ class canvas extends CanvasBase implements KeyListener{
 	public void spacecheck(){
 		int checkbox;
 		if(dircheck == false){
-			System.out.println("½Ğ¶}©l°Ê§@¡I");
+			System.out.println("è«‹é–‹å§‹å‹•ä½œï¼");
 		}else{
 			if(thiefy != 0 && thiefx != 0 && thiefy != intmaze.length-1 && thiefx != intmaze[0].length-1){
 				switch(dir){
@@ -286,7 +287,12 @@ class canvas extends CanvasBase implements KeyListener{
 			}else{
 				if(boxcount == 0){
 					System.out.println("pass");
-					JOptionPane.showMessageDialog(null, "®¥³ß§A§¹¦¨¥Ø¼Ğ","°T®§",JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(null, "æ­å–œä½ å®Œæˆç›®æ¨™","è¨Šæ¯",JOptionPane.INFORMATION_MESSAGE);
+					for(int i=0;i<intmaze.length;i++){
+						for(int j=0;j<intmaze[0].length;j++)
+							System.out.printf("%2d",(int)(intmaze[i][j]));
+						System.out.println();
+					}
 					System.exit(0);
 				}else
 					System.out.println("not pass");
@@ -304,8 +310,10 @@ class canvas extends CanvasBase implements KeyListener{
 		}
 		if(keynotget == false){
 			for(int i=0;i<saveboxp.length;i++){
-				if(y == saveboxp[i][0] && x == saveboxp[i][1] && (saveboxp[i][2] == 1 || saveboxp[i][2] == 4))
-					return i;
+				if(y == saveboxp[i][0] && x == saveboxp[i][1] && (saveboxp[i][2] == 1 || saveboxp[i][2] == 4)){
+					if(password() == 1)return i;
+					else return -1;
+				}
 			}
 		}
 		return -1;
@@ -393,6 +401,48 @@ class canvas extends CanvasBase implements KeyListener{
 		}
 		System.out.println(y + " " + x + " " + sgdirc);
 	}
+	public int password(){
+		String pq = "";
+		int pqans,i,j;
+		int style = (int)(Math.random() * 1000000 % 4);
+		if(style == 0){// +
+			i = (int)(Math.random() * 1000000 % 10000 + 1);
+			j = (int)(Math.random() * 1000000 % 10000 + 1);
+			pq = i + "+" + j + "= ?";
+			pqans = i + j;
+		}else if(style == 1){// -
+			i = (int)(Math.random() * 1000000 % 10000 + 1);
+			j = (int)(Math.random() * 1000000 % 10000 + 1);
+			pq = i + "-" + j + "= ?";
+			pqans = i - j;
+		}else if(style == 2){// *
+			i = (int)(Math.random() * 1000000 % 100 + 1);
+			j = (int)(Math.random() * 1000000 % 100 + 1);
+			pq = i + "*" + j + "= ?";
+			pqans = i * j;
+		}else{// /
+			i = (int)(Math.random() * 1000000 % 100 + 1);
+			while(true){
+				j = (int)(Math.random() * 1000000 % 100 + 1);
+				if((int)(i/j)>0)break;
+			}
+			pq = i + "/" + j + "= ?(å–å•†)";
+			pqans = (int)(i / j);
+		}
+		String ans = JOptionPane.showInputDialog(jf,pq,"Password",JOptionPane.INFORMATION_MESSAGE);
+		System.out.println("11111111111111111111111111111111111111111111");
+		//try{
+			if(Integer.parseInt(ans) == pqans){
+				JOptionPane.showMessageDialog(jf, "Oç­”å°O","è¨Šæ¯",JOptionPane.INFORMATION_MESSAGE);
+				return 1;
+			}else{
+				JOptionPane.showMessageDialog(jf, "Xç­”éŒ¯X","è¨Šæ¯",JOptionPane.INFORMATION_MESSAGE);
+				return -1;
+			}/*
+		}catch(Exception e){
+			return -1;
+		}*/
+	}
 }
 /*	 2
 * 1	 	3
@@ -415,7 +465,7 @@ class sg extends Thread{
 		while(check){
 			System.out.println(countsg++);
 			try{
-				sleep(1000);
+				sleep(333);
 				intmaze[y][x] = 0;
 				if((int)(Math.random() * 1000000 % 2) == 1){
 					if((int)(Math.random() * 1000000 % 2) == 1){
@@ -460,9 +510,9 @@ public class mazecase extends canvas{
 	static int a; //a and b is start position
 	static int b; //a = x,b = y
     static canvas can = new canvas();
-    //setRes ï¿½]ï¿½wres
-    //initMaze ï¿½ï¿½lï¿½Æ°gï¿½c
-	//updateMaze ï¿½ï¿½sï¿½gï¿½c
+    //setRes for image in res
+    //initMaze first time set
+	//updateMaze update position in maze
 	
     public static void main(String[] args) {
     	String[] res = {
@@ -496,15 +546,15 @@ public class mazecase extends canvas{
         Scanner sca=new Scanner(System.in);
 		int maze[][];
 		while(true){
-			System.out.print("½Ğ¿é¤J³õ¦a¤j¤p¡A¿é¤J¨â­Ó¼Æ¦r¥HªÅ±Æ¹j¶}(¨â­Ó¼Æ¦r»İ¤j©ó5)¡G");
+			System.out.print("è«‹è¼¸å…¥å ´åœ°å¤§å°ï¼Œè¼¸å…¥å…©å€‹æ•¸å­—ä»¥ç©ºæ’éš”é–‹(å…©å€‹æ•¸å­—éœ€å¤§æ–¼5)ï¼š");
 			int mazey = sca.nextInt();int mazex = sca.nextInt();
 			if(mazey > 5 && mazex >5){
 				maze = new int[mazey+2][mazex+2];break;
 			}else
-				System.out.println("½Ğ¿é¤J¤j©ó5ªº¼Æ¦r");
+				System.out.println("è«‹è¼¸å…¥å¤§æ–¼5çš„æ•¸å­—");
 		}
 		buildfence(maze);
-		System.out.println(maze.length+"*"+maze[0].length+"¤w«Ø¥ß§¹¦¨");
+		System.out.println(maze.length+"*"+maze[0].length+"å·²å»ºç«‹å®Œæˆ");
 		can.initMaze(maze,a,b,saveboxp,saveboxkey);
 		
 	}
@@ -529,8 +579,8 @@ public class mazecase extends canvas{
     	else if(count == 2)maze[maze.length-2][maze[0].length-2] = 0;
     	else maze[1][maze[0].length-2] = 0;
     	while(checkwall == false){
-    		int x,y,wallcount = 0;//countï¿½ï¿½jï¿½ï¿½ï¿½Oï¿½_ï¿½iï¿½Hï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½Ã¥Bï¿½ï¿½ï¿½Æ°ï¿½ï¿½ï¿½C
-    		while(true){//ï¿½Hï¿½ï¿½ï¿½Dï¿½ï¿½inwall
+    		int x,y,wallcount = 0;//wallcount for inwall count
+    		while(true){//random pick inwall to road number
     			y = (int)(Math.random() * 1000000 % maze.length-1);
     			x = (int)(Math.random() * 1000000 % maze[0].length-1);
     			if(x != 0 && y !=0 && (x % 2 == 0 || y % 2 == 0) && maze[y][x] == 5){
@@ -538,7 +588,7 @@ public class mazecase extends canvas{
     				break;
     			}
     		}
-    		for(int i=0;i<maze.length;i++){//ï¿½Tï¿½{ï¿½ï¿½ï¿½ä¦³ï¿½Lï¿½ï¿½
+    		for(int i=0;i<maze.length;i++){//inwall to road
         		for(int j=0;j<maze[0].length;j++){
         			if(maze[i][j] == 0){
         				if(maze[i-1][j] == -1){
@@ -639,9 +689,9 @@ public class mazecase extends canvas{
 		System.out.println("spawn key finish");
     }//1:wall,0:road,4:start,2:testsavecase,3:walkbefore
 	static int checkmaze(int x,int y,int [][]m,int wallfloor){
-    	if(m[y][x] == wallfloor && m[y-1][x] == 0 && m[y+1][x] == 0){//ï¿½Wï¿½ï¿½ï¿½U
-			if(m[y][x-1] == 0 && m[y][x+1] == 0){//ï¿½ï¿½ï¿½k
-				if(m[y+1][x+1] == 0 && m[y+1][x-1] == 0 && m[y-1][x+1] == 0 && m[y-1][x-1] == 0){//ï¿½ï¿½ï¿½Wï¿½ï¿½ï¿½Uï¿½kï¿½Wï¿½kï¿½U
+    	if(m[y][x] == wallfloor && m[y-1][x] == 0 && m[y+1][x] == 0){//mid,up,down
+			if(m[y][x-1] == 0 && m[y][x+1] == 0){//left,right
+				if(m[y+1][x+1] == 0 && m[y+1][x-1] == 0 && m[y-1][x+1] == 0 && m[y-1][x-1] == 0){//downright,downleft,upright,upleft
 					return 5;
 				}
 			}
