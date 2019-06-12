@@ -75,7 +75,7 @@ class canvas extends CanvasBase implements KeyListener{
 				drawkey += 15;
 			}
 		}
-		if(secfile)g.drawString("§A¤w¨ú±o¾÷±K¸ê®Æ",200, pony*50+10);
+		if(secfile)g.drawString("ä½ å·²å–å¾—æ©Ÿå¯†è³‡æ–™",200, pony*50+10);
 		
     }
     
@@ -108,7 +108,7 @@ class canvas extends CanvasBase implements KeyListener{
         jf.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		jf.addWindowListener(new WindowAdapter(){
    	    public void windowClosing(WindowEvent event){
-   	    	int yesno = JOptionPane.showConfirmDialog(jf, "§A½T©w­nÂ÷¶}¶Ü¡H","CloseWindow",JOptionPane.YES_NO_OPTION);
+   	    	int yesno = JOptionPane.showConfirmDialog(jf, "ä½ ç¢ºå®šè¦é›¢é–‹å—ï¼Ÿ","CloseWindow",JOptionPane.YES_NO_OPTION);
    	    	if(yesno == 0)System.exit(0);
    	     }
         });
@@ -122,7 +122,7 @@ class canvas extends CanvasBase implements KeyListener{
 		
         jf.setBounds(100, 100, ponx*50+100, pony*50+100);
         jf.setVisible(true);
-		JOptionPane.showMessageDialog(jf, "¥Ø¼Ğ¡G¨ú±o¾÷±K¸ê®Æ¡A¨Ã°k¥X¡C","°T®§",JOptionPane.INFORMATION_MESSAGE);
+		JOptionPane.showMessageDialog(jf, "ç›®æ¨™ï¼šå–å¾—æ©Ÿå¯†è³‡æ–™ï¼Œä¸¦é€ƒå‡ºã€‚","è¨Šæ¯",JOptionPane.INFORMATION_MESSAGE);
 		sgspawn();
 		timer = new Timer(100, new ActionListener() {
 		      @Override
@@ -132,7 +132,7 @@ class canvas extends CanvasBase implements KeyListener{
 				updateMaze(intmaze);
 				if(gameover){
 					timer.stop();
-					JOptionPane.showMessageDialog(jf, "§A³Q«O¥şµo²{¤F","°T®§",JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(jf, "ä½ è¢«ä¿å…¨ç™¼ç¾äº†","è¨Šæ¯",JOptionPane.WARNING_MESSAGE);
 					for(int i=0;i<intmaze.length;i++){
 						for(int j=0;j<intmaze[0].length;j++)
 							System.out.printf("%2d",(int)(intmaze[i][j]));
@@ -239,7 +239,7 @@ class canvas extends CanvasBase implements KeyListener{
 		int checkbox;
 		boolean delagspace = false;
 		if(dircheck == false){
-			System.out.println("½Ğ¶}©l°Ê§@¡I");
+			System.out.println("è«‹é–‹å§‹å‹•ä½œï¼");
 		}else{
 			if(thiefy != 0 && thiefx != 0 && thiefy != intmaze.length-1 && thiefx != intmaze[0].length-1){
 				switch(dir){
@@ -316,7 +316,7 @@ class canvas extends CanvasBase implements KeyListener{
 				if(secfile){
 					System.out.println("pass");
 					gamewin = true;
-					JOptionPane.showMessageDialog(jf, "®¥³ß§A§¹¦¨¥Ø¼Ğ","°T®§",JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(jf, "æ­å–œä½ å®Œæˆç›®æ¨™","è¨Šæ¯",JOptionPane.INFORMATION_MESSAGE);
 					System.out.println(sg1.warn);
 					for(int i=0;i<intmaze.length;i++){
 						for(int j=0;j<intmaze[0].length;j++)
@@ -326,7 +326,7 @@ class canvas extends CanvasBase implements KeyListener{
 					System.exit(0);
 				}else{
 					System.out.println("not pass");
-					JOptionPane.showMessageDialog(jf, "§AÁÙ¨S®³¨ì¾÷±K¸ê®Æ","°T®§",JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(jf, "ä½ é‚„æ²’æ‹¿åˆ°æ©Ÿå¯†è³‡æ–™","è¨Šæ¯",JOptionPane.INFORMATION_MESSAGE);
 				}
 			}
 			if(delagspace)updateMaze(intmaze);
@@ -341,7 +341,7 @@ class canvas extends CanvasBase implements KeyListener{
 			}
 			if(y == saveboxkey[i][3] && x == saveboxkey[i][4]){
 				System.out.println("You need key!");
-				JOptionPane.showMessageDialog(jf, "§A»İ­nÆ_°Í¤~¯à¸Ñ¶}","°T®§",JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(jf, "ä½ éœ€è¦é‘°åŒ™æ‰èƒ½è§£é–‹","è¨Šæ¯",JOptionPane.INFORMATION_MESSAGE);
 				return -1;
 			}
 		}
@@ -461,16 +461,16 @@ class canvas extends CanvasBase implements KeyListener{
 				j = (int)(Math.random() * 1000000 % 100 + 1);
 				if((int)(i/j)>0)break;
 			}
-			pq = i + "/" + j + "= ?(¨ú°Ó)";
+			pq = i + "/" + j + "= ?(å–å•†)";
 			pqans = (int)(i / j);
 		}
 		String ans = JOptionPane.showInputDialog(jf,pq,"Password",JOptionPane.INFORMATION_MESSAGE);
 		try{
 			if(Integer.parseInt(ans) == pqans){
-				JOptionPane.showMessageDialog(jf, "Oµª¹ïO","°T®§",JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(jf, "Oç­”å°O","è¨Šæ¯",JOptionPane.INFORMATION_MESSAGE);
 				return 1;
 			}else{
-				JOptionPane.showMessageDialog(jf, "Xµª¿ùX","°T®§",JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(jf, "Xç­”éŒ¯X","è¨Šæ¯",JOptionPane.INFORMATION_MESSAGE);
 				sg1.warn = true;
 				if(chance < 30)sg2.warn = true;
 				if(chance < 20)sg3.warn = true;
@@ -671,15 +671,15 @@ public class mazecase extends canvas{
         Scanner sca=new Scanner(System.in);
 		int maze[][];
 		while(true){
-			System.out.print("½Ğ¿é¤J³õ¦a¤j¤p¡A¿é¤J¨â­Ó¼Æ¦r¥HªÅ±Æ¹j¶}(¨â­Ó¼Æ¦r»İ¤j©ó9¤p©ó16)¡G");
+			System.out.print("è«‹è¼¸å…¥å ´åœ°å¤§å°ï¼Œè¼¸å…¥å…©å€‹æ•¸å­—ä»¥ç©ºæ’éš”é–‹(å…©å€‹æ•¸å­—éœ€å¤§æ–¼9å°æ–¼16)ï¼š");
 			int mazey = sca.nextInt();int mazex = sca.nextInt();
 			if(mazey > 5 && mazex > 5 && mazey < 16 && mazex < 16){
 				maze = new int[mazey+2][mazex+2];break;
 			}else
-				System.out.println("½Ğ¿é¤J¤j©ó9¤p©ó16ªº¼Æ¦r(«ØÄ³¼Æ¦r³£¬Û¦P)");
+				System.out.println("è«‹è¼¸å…¥å¤§æ–¼9å°æ–¼16çš„æ•¸å­—(å»ºè­°æ•¸å­—éƒ½ç›¸åŒ)");
 		}
 		buildfence(maze);
-		System.out.println(maze.length+"*"+maze[0].length+"¤w«Ø¥ß§¹¦¨");
+		System.out.println(maze.length+"*"+maze[0].length+"å·²å»ºç«‹å®Œæˆ");
 		can.initMaze(maze,a,b,saveboxp,saveboxkey);
 	}
 	
@@ -827,7 +827,7 @@ public class mazecase extends canvas{
 			while(true){
 				y = (int)(Math.random() * 1000000 % m.length);
 				x = (int)(Math.random() * 1000000 % m[0].length);
-				if(buildsaveboxcount > 2000){
+				if(buildsaveboxcount > 20000){
 					if(m[y][x] == 0 && (m[y+1][x] == 0 || m[y][x-1] == 0 || m[y-1][x] == 0 || m[y][x+1] == 0)){
 						if(countnum == 0){
 							saveboxdir(m,x,y);
@@ -936,7 +936,7 @@ public class mazecase extends canvas{
 				while(true){
 					int y = (int)(Math.random() * 1000000 % m.length-1);
 					int x = (int)(Math.random() * 1000000 % m[0].length-1);
-					if(spawnkeycount++ > 2000){
+					if(spawnkeycount++ > 20000){
 						if(m[y][x] == 0 && (m[y+1][x] == 0 || m[y][x-1] == 0 || m[y-1][x] == 0 || m[y][x+1] == 0)){
 							saveboxkey[i][0] = y;saveboxkey[i][1] = x;
 							saveboxkey[i][3] = saveboxp[i][0];saveboxkey[i][4] = saveboxp[i][1];
