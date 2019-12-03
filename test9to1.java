@@ -42,7 +42,7 @@ public class test9to1 {
 		}
 		return sum;
 	}
-	public static String print(int num,int list[][]){//print for show
+	public static String print(int num,int list[][]){//print to show
 		String str = "";
 		while(num > 0){
 			num--;
