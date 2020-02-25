@@ -172,7 +172,7 @@ class canvas extends CanvasBase implements KeyListener{
 		}
 	}
 	/*	  2
-	 * 1	 3
+	 * 1	 	 3
 	 *	  0		*/
 	@Override
 	public void keyReleased(KeyEvent e) {
